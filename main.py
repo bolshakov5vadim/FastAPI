@@ -54,7 +54,7 @@ def read(id, db: Session = Depends(get_db)):
 @app.post("/api")
 def create(data  = Body(), db: Session = Depends(get_db)):
 
-    person = Person(name=data["name"], age=data["age"]) # запрос
+    person = Person(name=data["name"], surname=data["surname"], status=data["status"]) # запрос
 
     db.add(person)
     db.commit()
@@ -70,8 +70,9 @@ def update(data  = Body(), db: Session = Depends(get_db)):
         return JSONResponse(status_code=404, content={ "message": "Пользователь не найден"})
 
     # если пользователь найден, обновляем его
-    person.age = data["age"]
+    person.surname=data["surname"]
     person.name = data["name"]
+    person.status=data["status"]
     db.commit()
     db.refresh(person)
     return person
