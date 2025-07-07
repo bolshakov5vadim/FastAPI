@@ -15,7 +15,7 @@ class Base(DeclarativeBase): pass
  
 #создаем модель бд
 class Person(Base):
-   __tablename__ = "people"
+   __tablename__ = config('TABLE_NAME')
 
    id = Column(Integer, primary_key=True, index=True)
    name = Column(String)
