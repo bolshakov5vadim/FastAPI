@@ -8,7 +8,7 @@ from fastapi import Depends, FastAPI, Body
 from fastapi.responses import JSONResponse, FileResponse
 
 from decouple import Config, RepositoryEnv
-ENV_FILE = '.env'
+ENV_FILE = 'e.env'
 config = Config(RepositoryEnv(ENV_FILE))
 
 class Base(DeclarativeBase): pass
