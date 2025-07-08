@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-import psycopg2 # иногда требуется для postgres
+import psycopg2 # Иногда требуется для postgres
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy import  Column, Integer, String
 from sqlalchemy.orm import Session
@@ -13,7 +13,7 @@ config = Config(RepositoryEnv(ENV_FILE))
 
 class Base(DeclarativeBase): pass
  
-#создаем модель бд
+#Создаем модель бд
 class Person(Base):
    __tablename__ = config('TABLE_NAME')
 
@@ -23,11 +23,14 @@ class Person(Base):
    birthday = Column(Integer)
    status = Column(String)
 
+# Создание соединения
 engine = create_engine(config('DB_LINK'))
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
-Base.metadata.create_all(bind=engine) # создание таблиц если их нет
- 
+Base.metadata.create_all(bind=engine) 
+# Создание таблиц если их нет
+
+
 app = FastAPI()
 
 def get_db():
