@@ -1,5 +1,4 @@
 sqlalchemy
+psycopg2
 fastapi
 python-decouple
-psycopg2
-

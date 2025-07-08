@@ -23,7 +23,7 @@ class Person(Base):
    birthday = Column(Integer)
    status = Column(String)
 
-engine = create_engine(config('DB_LINK'), connect_args={"check_same_thread": False})
+engine = create_engine(config('DB_LINK'))
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine) # создание таблиц если их нет
@@ -54,7 +54,7 @@ def read(id, db: Session = Depends(get_db)):
 @app.post("/api")
 def create(data  = Body(), db: Session = Depends(get_db)):
 
-    person = Person(name=data["name"], surname=data["surname"], status=data["status"]) # запрос
+    person = Person(name=data["name"], surname=data["surname"]) # запрос
 
     db.add(person)
     db.commit()
@@ -70,9 +70,8 @@ def update(data  = Body(), db: Session = Depends(get_db)):
         return JSONResponse(status_code=404, content={ "message": "Пользователь не найден"})
 
     # если пользователь найден, обновляем его
-    person.surname=data["surname"]
     person.name = data["name"]
-    person.status=data["status"]
+    person.surname = data["surname"]
     db.commit()
     db.refresh(person)
     return person
