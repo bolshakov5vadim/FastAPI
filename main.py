@@ -81,7 +81,7 @@ def update(data  = Body(), db: Session = Depends(get_db)):
 @app.delete("/api/{id}")
 def delete(id, db: Session = Depends(get_db)):
 
-    person = db.query(Person).filter(Person.id == data["id"]).first() # запрос
+    person = db.query(Person).filter(Person.id == "id").first() # запрос
 
     if person == None:
         return JSONResponse( status_code=404, content={ "message": "Пользователь не найден"})
