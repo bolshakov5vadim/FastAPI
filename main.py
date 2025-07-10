@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
-import psycopg2 # иногда требуется для postgres
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy import  Column, Integer, String
 from sqlalchemy.orm import Session
+import psycopg2 # Иногда требуется для postgres
+# Бибилотеки SQL
 
 from fastapi import Depends, FastAPI, Body
 from fastapi.responses import JSONResponse, FileResponse
@@ -10,10 +11,11 @@ from fastapi.responses import JSONResponse, FileResponse
 from decouple import Config, RepositoryEnv
 ENV_FILE = 'e.env'
 config = Config(RepositoryEnv(ENV_FILE))
+# Подключение конфиг-файла
+
+# Создаем модель бд
 
 class Base(DeclarativeBase): pass
- 
-#создаем модель бд
 class Person(Base):
    __tablename__ = config('TABLE_NAME')
 
@@ -26,8 +28,9 @@ class Person(Base):
 engine = create_engine(config('DB_LINK'))
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
-Base.metadata.create_all(bind=engine) # создание таблиц если их нет
+Base.metadata.create_all(bind=engine) # Создание таблиц, если их нет
  
+# API + описание 4-х его действий
 app = FastAPI()
 
 def get_db():
@@ -43,11 +46,11 @@ def read_all(db: Session = Depends(get_db)):
   
 @app.get("/api/{id}")
 def read(id, db: Session = Depends(get_db)):
-    person = db.query(Person).filter(Person.id == id).first() # запрос
+    person = db.query(Person).filter(Person.id == id).first() # Запрос
 
     if person==None:  
         return JSONResponse(status_code=404, content={ "message": "Пользователь не найден"})
-    #если пользователь найден, отправляем его
+    # Если пользователь найден, отправляем его
     return person
   
   
@@ -64,12 +67,12 @@ def create(data  = Body(), db: Session = Depends(get_db)):
 @app.put("/api")
 def update(data  = Body(), db: Session = Depends(get_db)):
    
-    person = db.query(Person).filter(Person.id == data["id"]).first() # запрос
+    person = db.query(Person).filter(Person.id == data["id"]).first() # Запрос
 
     if person == None: 
         return JSONResponse(status_code=404, content={ "message": "Пользователь не найден"})
 
-    # если пользователь найден, обновляем его
+    # Если пользователь найден, обновляем его
     person.name = data["name"]
     person.surname = data["surname"]
     person.status=data["status"]
@@ -81,12 +84,12 @@ def update(data  = Body(), db: Session = Depends(get_db)):
 @app.delete("/api/{id}")
 def delete(id, db: Session = Depends(get_db)):
 
-    person = db.query(Person).filter(Person.id == "id").first() # запрос
+    person = db.query(Person).filter(Person.id == id).first() # Запрос
 
     if person == None:
         return JSONResponse( status_code=404, content={ "message": "Пользователь не найден"})
    
-    # если пользователь найден, удаляем его
+    # Если пользователь найден, удаляем его
     db.delete(person)
     db.commit()
     return person
