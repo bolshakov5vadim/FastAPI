@@ -31,7 +31,8 @@ def read(id, db: Session = Depends(get_db)):
 @app.post("/api")
 def create(data  = Body(), db: Session = Depends(get_db)):
 
-    person = Person(name=data["name"], surname=data["surname"], status=data["status"]) # запрос
+    person = Person(name=data["name"], surname=data["surname"], status=data["status"]) 
+    # Запрос. ID отправлять не нужно, auto-increment
 
     db.add(person)
     db.commit()
